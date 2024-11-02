@@ -1,0 +1,78 @@
+version: '3'
+
+tasks:
+  initial-setup:install-dependencies:
+    desc: Install required dependencies for dracut module
+    cmds:
+      - apt update
+      - apt install -y fido2-tools cryptsetup dropbear
+
+  copy-dracut-module:
+    desc: Copy the fido2-nosystemd module to dracut directory
+    cmds:
+      - rm -f /usr/lib/dracut/modules.d/91fido2-nosystemd
+      - cp -r 91fido2-nosystemd /usr/lib/dracut/modules.d
+
+  initial-setup::configure-network:
+    desc: Configure dracut-network for network interface setup
+    cmds:
+      - mkdir -p /etc/cmdline.d
+      - echo 'ip=dhcp rd.neednet=1 loglevel=7 zbm.timeout=60' > /etc/cmdline.d/dracut-network.conf
+
+  initial-setup::configure-refind:
+    desc: Configure rEFInd for ZFSBootMenu
+    cmds:
+      # - refind-install
+      - rm /boot/refind_linux.conf
+      - |
+          cat << EOF > /boot/efi/EFI/ZBM/refind_linux.conf
+          "Boot with network"  "ip=dhcp rd.neednet=1 loglevel=7 zbm.timeout=60"
+          "Boot to menu"  "quiet loglevel=0 zbm.show"
+          EOF
+
+  initial-setup:configure-dropbear:
+    desc: Configure Dropbear for remote SSH access
+    cmds:
+      - mkdir -p /etc/dropbear
+      - for keytype in rsa ecdsa ed25519; do dropbearkey -t "${keytype}" -f "/etc/dropbear/dropbear_${keytype}_host_zbm_key"; done
+      - ln -s "${HOME}/.ssh/authorized_keys" /etc/dropbear/root_key
+
+  clean-old-configs:
+    desc: Clean up old ZFSBootMenu configurations
+    cmds:
+      - rm -rf /etc/zfsbootmenu/dracut.conf.d
+      - mkdir -p /etc/zfsbootmenu/dracut.conf.d
+      - rm -rf /etc/zfsbootmenu/hooks
+
+  copy-release-config:
+    desc: Clean & copy release build configuration for ZFSBootMenu
+    cmds:
+      - task: clean-old-configs
+      - cp zfsbootmenu/release.conf.d/*.conf /etc/zfsbootmenu/dracut.conf.d/
+      - cp zfsbootmenu/config.yml /etc/zfsbootmenu/config.yml
+      - cp -r zfsbootmenu/hooks /etc/zfsbootmenu/
+
+  copy-recovery-config:
+    desc: Clean & copy recovery build configuration for ZFSBootMenu with remote access
+    cmds:
+      - task: clean-old-configs
+      - cp zfsbootmenu/recovery.conf.d/*.conf /etc/zfsbootmenu/dracut.conf.d/
+      - cp zfsbootmenu/config.yml /etc/zfsbootmenu/config.yml
+      - cp -r zfsbootmenu/hooks /etc/zfsbootmenu/
+
+  generate-zbm:
+    desc: Generate ZFSBootMenu
+    cmds:
+      - generate-zbm --debug
+
+  rename-zbm-efi-recovery:
+    desc: Rename the latest ZFSBootMenu EFI file to avoid pruning during future builds
+    dir: /boot/efi/EFI/ZBM
+    cmds:
+      - mv $(ls vmlinuz-2.3.0_*.EFI | sort -V | tail -n 1) vmlinuz-recovery.EFI
+
+  rename-zbm-efi-release:
+    desc: Rename the latest ZFSBootMenu EFI file for release build
+    dir: /boot/efi/EFI/ZBM
+    cmds:
+      - mv $(ls vmlinuz-2.3.0_*.EFI | sort -V | tail -n 1) vmlinuz-release.EFI

@@ -37,6 +37,16 @@ cp -ri 91fido2-nosystemd /usr/lib/dracut/modules.d
 
 The module is NOT enabled by default. Add it to your config: `add_dracutmodules+=" fido2-nosystemd "`.
 
+### Via Taskfile
+
+You can [install Task](https://taskfile.dev/installation) to automate the commands:
+
+```bash
+sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+
+task --list-all
+```
+
 ## Troubleshoot commands
 
 To unlock LUKS with FIDO2 only:
@@ -171,5 +181,7 @@ After testing it, rename it to avoid future builds pruning it:
 
 ```bash
 cd /boot/efi/EFI/ZBM
-mv ...
+mv vmlinuz-2.3.0_BUILD_NUMBER.EFI vmlinuz-recovery.EFI
+# Or for release:
+mv vmlinuz-2.3.0_BUILD_NUMBER.EFI vmlinuz-release.EFI
 ```
