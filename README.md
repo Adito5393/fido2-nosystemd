@@ -103,3 +103,73 @@ lsinitrd /boot/initrd.img-6.9.9-amd64 -f etc/crypttab
 ```bash
 systemd-cryptenroll /dev/nvme2n1p3
 ```
+
+## ZBM
+
+Build it from source as [the docs](https://docs.zfsbootmenu.org/en/v2.3.x/guides/debian/bookworm-uefi.html#install-zfsbootmenu) recommend it.
+
+Following the [ZBM binaries releases](https://docs.zfsbootmenu.org/en/v2.3.x/general/binary-releases.html), both contain the FIDO2 module to unlock a LUKS partition:
+
+- release
+- recovery
+  - [Remote SSH Access](https://docs.zfsbootmenu.org/en/v2.3.x/general/remote-access.html)
+
+If you use dracut on the host also, add:
+
+```bash
+nano /etc/dracut.conf.d/ssh.conf
+omit_dracutmodules+=" crypt-ssh "
+```
+
+Inform dracut-network that it must bring up a network interface:
+
+```bash
+mkdir -p /etc/cmdline.d
+echo "ip=dhcp rd.neednet=1 loglevel=7 zbm.timeout=60" > /etc/cmdline.d/dracut-network.conf
+```
+
+Or if you use refind:
+
+```bash
+refind-install
+rm /boot/refind_linux.conf
+
+cat << EOF > /boot/efi/EFI/ZBM/refind_linux.conf
+"Boot with network"  "ip=dhcp rd.neednet=1 loglevel=7 zbm.timeout=60"
+"Boot to menu"  "quiet loglevel=0 zbm.show"
+EOF
+```
+
+Configuring Dropbear
+
+```bash
+apt install dropbear
+
+mkdir -p /etc/dropbear
+for keytype in rsa ecdsa ed25519; do
+    dropbearkey -t "${keytype}" -f "/etc/dropbear/dropbear_${keytype}_host_zbm_key"
+done
+
+ln -s "${HOME}/.ssh/authorized_keys" /etc/dropbear/root_key
+```
+
+Build it:
+
+```bash
+# Clean up old configs:
+rm -rf /etc/zfsbootmenu/dracut.conf.d
+mkdir -p /etc/zfsbootmenu/dracut.conf.d
+# For release build:
+cp zfsbootmenu/release.conf.d/*.conf /etc/zfsbootmenu/dracut.conf.d/
+# For recovery with remote access:
+cp zfsbootmenu/recovery.conf.d/*.conf /etc/zfsbootmenu/dracut.conf.d/
+
+generate-zbm --debug
+```
+
+After testing it, rename it to avoid future builds pruning it:
+
+```bash
+cd /boot/efi/EFI/ZBM
+mv ...
+```
