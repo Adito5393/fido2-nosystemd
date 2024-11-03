@@ -25,7 +25,9 @@ tasks:
     desc: Configure dracut-network for network interface setup
     cmds:
       - mkdir -p /etc/cmdline.d
-      - echo 'ip=dhcp rd.neednet=1 loglevel=7 zbm.timeout=60' > /etc/cmdline.d/dracut-network.conf
+      - echo 'ip=dhcp rd.neednet=1 rd.break' > /etc/cmdline.d/dracut-network.conf
+      # ip=<client-IP>:[<peer>]:<gateway-IP>:<netmask>:<client_hostname>:<interface>:{none|off|dhcp|on|any|dhcp6|auto6|ibft}
+      #- echo 'ip=192.168.40.99::192.168.40.1:255.255.255.0::eth0:none rd.neednet=1 rd.break' > /etc/cmdline.d/dracut-network.conf
       - echo "send fqdn.fqdn zbm;" >> /usr/lib/dracut/modules.d/35network-legacy/dhclient.conf
 
   initial-setup:configure-refind:
@@ -35,7 +37,7 @@ tasks:
       - rm -f /boot/refind_linux.conf
       - |
           cat << EOF > /boot/efi/EFI/ZBM/refind_linux.conf
-          "Boot with network"  "ip=dhcp rd.neednet=1 loglevel=7 zbm.timeout=60"
+          "Boot default"  "loglevel=7 zbm.timeout=60"
           "Boot to menu"  "quiet loglevel=0 zbm.show"
           EOF
 

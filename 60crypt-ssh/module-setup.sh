@@ -11,7 +11,7 @@ check() {
 }
 
 depends() {
-  echo network
+  echo network-legacy
   return 0
 }
 
@@ -108,6 +108,7 @@ install() {
   inst_hook pre-pivot 05 "$moddir/dropbear-stop.sh"
 
   inst "${dropbear_acl}" /root/.ssh/authorized_keys
+  chown root:root /root/.ssh/authorized_keys
 
   #cleanup
   rm -rf $tmpDir
@@ -119,7 +120,7 @@ install() {
   #dropbear should always be in /sbin so the start script works
   local dropbear
   if dropbear="$(command -v dropbear 2>/dev/null)"; then
-    inst "${dropbear}" /sbin/dropbear
+    inst "${dropbear}" /usr/sbin/dropbear
   else
     derror "Unable to locate dropbear executable"
     return 1
