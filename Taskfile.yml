@@ -10,7 +10,7 @@ tasks:
   copy-dracut-module:
     desc: Copy the fido2-nosystemd module to dracut directory
     cmds:
-      - rm -f /usr/lib/dracut/modules.d/91fido2-nosystemd
+      - rm -rf /usr/lib/dracut/modules.d/91fido2-nosystemd
       - cp -r 91fido2-nosystemd /usr/lib/dracut/modules.d
 
   initial-setup::configure-network:

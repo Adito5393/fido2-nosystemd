@@ -44,6 +44,9 @@ You can [install Task](https://taskfile.dev/installation) to automate the comman
 ```bash
 sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
 
+mkdir -p /usr/local/src/fido2-nosystemd
+cd /usr/local/src/fido2-nosystemd && git clone https://github.com/Adito5393/fido2-nosystemd.git .
+
 task --list-all
 ```
 
