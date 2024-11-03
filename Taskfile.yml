@@ -26,6 +26,7 @@ tasks:
     cmds:
       - mkdir -p /etc/cmdline.d
       - echo 'ip=dhcp rd.neednet=1 loglevel=7 zbm.timeout=60' > /etc/cmdline.d/dracut-network.conf
+      - echo "send fqdn.fqdn zbm;" >> /usr/lib/dracut/modules.d/35network-legacy/dhclient.conf
 
   initial-setup:configure-refind:
     desc: Configure rEFInd for ZFSBootMenu

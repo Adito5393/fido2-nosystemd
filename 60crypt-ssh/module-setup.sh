@@ -124,4 +124,7 @@ install() {
     derror "Unable to locate dropbear executable"
     return 1
   fi
+
+  ## Add dropbear welcome message
+  inst "$moddir/banner.txt" /etc/banner.txt
 }

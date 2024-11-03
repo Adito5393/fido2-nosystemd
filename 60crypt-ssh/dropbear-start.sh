@@ -19,6 +19,6 @@ fi
     info "  bubblebabble: ${bubble}"
   done
 
-  /sbin/dropbear -s -j -k -p ${dropbear_port} -P /tmp/dropbear.pid
+  /sbin/dropbear -s -j -k -p ${dropbear_port} -P /tmp/dropbear.pid -b /etc/banner.txt
   [ $? -gt 0 ] && info 'Dropbear sshd failed to start'
 }
