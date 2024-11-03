@@ -51,7 +51,7 @@ tasks:
     cmds:
       - task: clean-old-configs
       - cp zfsbootmenu/release.conf.d/*.conf /etc/zfsbootmenu/dracut.conf.d/
-      - cp zfsbootmenu/config.yml /etc/zfsbootmenu/config.yml
+      - cp zfsbootmenu/config.yaml /etc/zfsbootmenu/config.yaml
       # - cp -r zfsbootmenu/hooks /etc/zfsbootmenu/
 
   copy-recovery-config:
@@ -59,7 +59,7 @@ tasks:
     cmds:
       - task: clean-old-configs
       - cp zfsbootmenu/recovery.conf.d/*.conf /etc/zfsbootmenu/dracut.conf.d/
-      - cp zfsbootmenu/config.yml /etc/zfsbootmenu/config.yml
+      - cp zfsbootmenu/config.yaml /etc/zfsbootmenu/config.yaml
       # - cp -r zfsbootmenu/hooks /etc/zfsbootmenu/
 
   generate-zbm:
