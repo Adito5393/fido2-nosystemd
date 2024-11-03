@@ -127,6 +127,7 @@ Following the [ZBM binaries releases](https://docs.zfsbootmenu.org/en/v2.3.x/gen
 - recovery
   - [Remote SSH Access](https://docs.zfsbootmenu.org/en/v2.3.x/general/remote-access.html)
 
+To install `crypt-ssh`, see the [official repo](https://github.com/dracut-crypt-ssh/dracut-crypt-ssh) or use the version here (`task initial-setup:install-crypt-ssh-nohelpers`).
 If you use dracut on the host also, add:
 
 ```bash
