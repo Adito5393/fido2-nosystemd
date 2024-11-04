@@ -34,7 +34,8 @@ tasks:
     desc: Fix broken module (dracut 059-4 https://github.com/dracutdevs/dracut/issues/2620)
     cmds:
     # /lib/dracut/hooks/initqueue/finished also does not work
-      - sed -i '/echo '\''for i in \/tmp\/net\.\*\.did-setup/i\            mkdir -p "\$hookdir"/initqueue/finished' /usr/lib/dracut/modules.d/35network-legacy/net-genrules.sh
+#      - sed -i '/echo '\''for i in \/tmp\/net\.\*\.did-setup/i\            mkdir -p "\$hookdir"/initqueue/finished' /usr/lib/dracut/modules.d/35network-legacy/net-genrules.sh
+      - sed -i '/echo "\[ -f \/tmp\/net\.\$netif\.did-setup \]"/i\        mkdir -p "\$hookdir"/initqueue/finished' /usr/lib/dracut/modules.d/35network-legacy/dhclient-script.sh
 
   initial-setup:configure-refind:
     desc: Configure rEFInd for ZFSBootMenu
