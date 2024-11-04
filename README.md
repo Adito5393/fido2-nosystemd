@@ -210,3 +210,4 @@ mv vmlinuz-2.3.0_BUILD_NUMBER.EFI vmlinuz-release.EFI
 ## Resources
 
 - Sithuk's [Ubuntu zfsbootmenu install script](https://github.com/Sithuk/ubuntu-server-zfsbootmenu)
+- [How to debug Dracut problems](https://fedoraproject.org/wiki/How_to_debug_Dracut_problems)

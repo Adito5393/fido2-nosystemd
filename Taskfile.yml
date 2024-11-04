@@ -23,7 +23,9 @@ tasks:
     desc: Configure dracut-network for network interface setup
     cmds:
       - mkdir -p /etc/cmdline.d
-      - echo 'ip=dhcp rd.neednet=1 rd.break' > /etc/cmdline.d/dracut-network.conf
+#       rd.break=[cmdline|pre-udev|pre-trigger|initqueue|pre-mount|mount|pre-pivot|cleanup]
+#       drop the shell on defined breakpoint (use egrep 'rd.?break' /usr/lib/dracut/modules.d/99base/init.sh to find the breakpoints supported by your dracut version)
+      - echo 'ip=dhcp rd.neednet=1 rd.shell' > /etc/cmdline.d/dracut-network.conf
       # ip=<client-IP>:[<peer>]:<gateway-IP>:<netmask>:<client_hostname>:<interface>:{none|off|dhcp|on|any|dhcp6|auto6|ibft}
       #- echo 'ip=192.168.40.99::192.168.40.1:255.255.255.0::eth0:none rd.neednet=1 rd.break' > /etc/cmdline.d/dracut-network.conf
       - echo "send fqdn.fqdn zbm;" >> /usr/lib/dracut/modules.d/35network-legacy/dhclient.conf
