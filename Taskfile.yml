@@ -5,9 +5,7 @@ tasks:
     desc: Install required dependencies for dracut module
     cmds:
       - apt update
-      - apt install -y fido2-tools cryptsetup dropbear dracut-core dracut-network
-      - systemctl stop dropbear.service
-      - systemctl disable dropbear.service
+      - apt install -y fido2-tools cryptsetup dropbear-bin dracut-core dracut-network
 
   initial-setup:install-crypt-ssh-nohelpers:
     desc: Copy the crypt-ssh (no helpers) module to dracut directory
