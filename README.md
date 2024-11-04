@@ -9,6 +9,14 @@ THE PROBLEM: the [dracut fido2](https://github.com/dracutdevs/dracut/blob/master
 
 This module adds the required libraries/files without the systemd full dependencies.
 
+⚠️ **Known issues (WIP):** ⚠️
+
+- the recovery image containing the SSH server does not start automatically ([Github issue](https://github.com/dracutdevs/dracut/issues/2620)), it requires manual intervention:
+  - enter LUKS password during ZBM boot
+  - press `ESC` at the ZBM menu & enter shell (press `CTRL` + `R`)
+    - Initialize network: `dhclient eth0`
+    - See assigned IP: `ip a`
+
 ## Requirements
 
 - [libfido2](https://developers.yubico.com/libfido2/) - on Debian: `apt install fido2-tools`
@@ -109,6 +117,15 @@ ldd /usr/lib/x86_64-linux-gnu/cryptsetup/libcryptsetup-token-systemd-fido2.so
 ```bash
 lsinitrd /boot/efi/EFI/ZBM/vmlinuz-2.3.0_3.EFI
 lsinitrd /boot/initrd.img-6.9.9-amd64 -f etc/crypttab
+```
+
+Inside the initramfs, inspect the system logs:
+
+```bash
+less /run/initramfs/rdsosreport.txt
+journalctl -a
+dmesg
+less /run/initramfs/init.log
 ```
 
 ### Check Existing Key Slots

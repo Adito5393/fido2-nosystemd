@@ -30,6 +30,12 @@ tasks:
       #- echo 'ip=192.168.40.99::192.168.40.1:255.255.255.0::eth0:none rd.neednet=1 rd.break' > /etc/cmdline.d/dracut-network.conf
       - echo "send fqdn.fqdn zbm;" >> /usr/lib/dracut/modules.d/35network-legacy/dhclient.conf
 
+  initial-setup:patch-dracut-network-legacy:
+    desc: Fix broken module (dracut 059-4 https://github.com/dracutdevs/dracut/issues/2620)
+    cmds:
+    # /lib/dracut/hooks/initqueue/finished also does not work
+      - sed -i '/echo '\''for i in \/tmp\/net\.\*\.did-setup/i\            mkdir -p "\$hookdir"/initqueue/finished' /usr/lib/dracut/modules.d/35network-legacy/net-genrules.sh
+
   initial-setup:configure-refind:
     desc: Configure rEFInd for ZFSBootMenu
     cmds:
@@ -45,7 +51,7 @@ tasks:
     desc: Configure Dropbear for remote SSH access
     cmds:
       - mkdir -p /etc/dropbear
-      - for keytype in rsa ecdsa ed25519; do dropbearkey -t "${keytype}" -f "/etc/dropbear/dropbear_${keytype}_host_key"; done
+      - for keytype in rsa ecdsa ed25519; do ssh-keygen -t "${keytype}" -f "/etc/dropbear/dropbear_${keytype}_host_key" -N ""; done
       - ln -s "${HOME}/.ssh/authorized_keys" /etc/dropbear/root_key
 
   clean-old-configs:
