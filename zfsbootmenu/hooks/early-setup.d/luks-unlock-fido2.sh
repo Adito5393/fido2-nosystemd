@@ -42,9 +42,11 @@ unset src sources
 luks="/dev/disk/by-partlabel/KEYSTORE"
 dm="/dev/mapper/KEYSTORE"
 
-# Force the network online
-echo "Bringing the network interface online"
-dhclient eth0
+if command -v dhclient >/dev/null 2>&1; then
+  # Force the network online
+  echo "Bringing the network interface online"
+  dhclient eth0
+fi
 
 if [ ! -b "${luks}" ] ; then
   zinfo "keystore device ${luks} does not exist"
