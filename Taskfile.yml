@@ -7,6 +7,13 @@ tasks:
       - apt update
       - apt install -y sbsigntool shim-signed
 
+  sb:update-auto-signing-setup:
+    desc: WIP
+    cmds:
+      - cp zfsbootmenu/config.yaml /etc/zfsbootmenu/config.yaml
+      - rm -rf /etc/zfsbootmenu/generate-zbm.post.d
+      - cp -r zfsbootmenu/generate-zbm.post.d /etc/zfsbootmenu/
+
   initial-setup:install-dependencies:
     desc: Install required dependencies for dracut module
     cmds:
@@ -82,7 +89,7 @@ tasks:
       - task: clean-old-configs
       - cp zfsbootmenu/recovery.conf.d/*.conf /etc/zfsbootmenu/dracut.conf.d/
       - cp zfsbootmenu/config.yaml /etc/zfsbootmenu/config.yaml
-      # - cp -r zfsbootmenu/hooks /etc/zfsbootmenu/
+      - cp -r zfsbootmenu/hooks /etc/zfsbootmenu/
 
   generate-zbm:
     desc: Generate ZFSBootMenu
