@@ -8,7 +8,7 @@ tasks:
       - apt install -y sbsigntool shim-signed
 
   sb:update-auto-signing-setup:
-    desc: WIP
+    desc: Update ZFSBootMenu config and post-generation scripts for auto-signing setup.
     cmds:
       - cp zfsbootmenu/config.yaml /etc/zfsbootmenu/config.yaml
       - rm -rf /etc/zfsbootmenu/generate-zbm.post.d
