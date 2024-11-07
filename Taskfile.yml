@@ -6,6 +6,9 @@ tasks:
     cmds:
       - apt update
       - apt install -y sbsigntool shim-signed
+      - echo "Mark sbsigntool package as held back, which will prevent the package from being automatically installed, upgraded or removed."
+      - apt-mark hold sbsigntool
+      # - apt-mark showhold OR to allow automatically upgrades: apt-mark unhold sbsigntool
 
   sb:update-auto-signing-setup:
     desc: Update ZFSBootMenu config and post-generation scripts for auto-signing setup.
@@ -100,10 +103,10 @@ tasks:
     desc: Rename the latest ZFSBootMenu EFI file to avoid pruning during future builds
     dir: /boot/efi/EFI/ZBM
     cmds:
-      - mv $(ls vmlinuz-2.3.0_*.EFI | sort -V | tail -n 1) vmlinuz-recovery.EFI
+      - mv $(ls vmlinuz-2.3.0_*-signed.efi | sort -V | tail -n 1) vmlinuz-recovery.EFI
 
   rename-zbm-efi-release:
     desc: Rename the latest ZFSBootMenu EFI file for release build
     dir: /boot/efi/EFI/ZBM
     cmds:
-      - mv $(ls vmlinuz-2.3.0_*.EFI | sort -V | tail -n 1) vmlinuz-release.EFI
+      - mv $(ls vmlinuz-2.3.0_*-signed.efi | sort -V | tail -n 1) vmlinuz-release.EFI
