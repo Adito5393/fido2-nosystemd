@@ -203,3 +203,7 @@ mv vmlinuz-2.3.0_BUILD_NUMBER.EFI vmlinuz-release.EFI
 
 - Sithuk's [Ubuntu zfsbootmenu install script](https://github.com/Sithuk/ubuntu-server-zfsbootmenu)
 - [How to debug Dracut problems](https://fedoraproject.org/wiki/How_to_debug_Dracut_problems)
+- [mdcurtis/dracut-earlyssh](https://github.com/mdcurtis/dracut-earlyssh) - dracut initramfs module to start sshd on early boot to enter encryption passphrase
+- [KorewaKiyo/zfsbootmenu-sb](https://github.com/KorewaKiyo/zfsbootmenu-sb)
+- rEFInd [Controlling Secure Boot](https://www.rodsbooks.com/efi-bootloaders/controlling-sb.html)
+- [Fedora on ZFS root with Secure Boot enabled](https://gist.github.com/techhazard/e5feca0535317d2a94a6f086433d3a25)

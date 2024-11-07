@@ -2,6 +2,7 @@ Global:
   ManageImages: true
   BootMountPoint: /boot/efi
   DracutConfDir: /etc/zfsbootmenu/dracut.conf.d
+  PostHooksDir: /etc/zfsbootmenu/generate-zbm.post.d
   DracutFlags:
     - "--no-early-microcode"
 Components:
@@ -16,3 +17,10 @@ EFI:
   # SplashImage: /etc/zfsbootmenu/splash.bmp
 Kernel:
   CommandLine: ro quiet loglevel=0
+SecureBoot:
+  SignBackup: true
+  DeleteUnsigned: true
+  SignMethod: sbsign
+  KeyDir: /etc/refind.d/keys
+  KeyFileName: refind_local.key
+  CrtFileName: refind_local.crt

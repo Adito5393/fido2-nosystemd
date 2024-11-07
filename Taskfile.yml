@@ -1,6 +1,19 @@
 version: '3'
 
 tasks:
+  sb:install-dependencies:
+    desc: Install required dependencies for secure boot
+    cmds:
+      - apt update
+      - apt install -y sbsigntool shim-signed
+
+  sb:update-auto-signing-setup:
+    desc: Update ZFSBootMenu config and post-generation scripts for auto-signing setup.
+    cmds:
+      - cp zfsbootmenu/config.yaml /etc/zfsbootmenu/config.yaml
+      - rm -rf /etc/zfsbootmenu/generate-zbm.post.d
+      - cp -r zfsbootmenu/generate-zbm.post.d /etc/zfsbootmenu/
+
   initial-setup:install-dependencies:
     desc: Install required dependencies for dracut module
     cmds:
@@ -60,7 +73,7 @@ tasks:
     cmds:
       - rm -rf /etc/zfsbootmenu/dracut.conf.d
       - mkdir -p /etc/zfsbootmenu/dracut.conf.d
-      # - rm -rf /etc/zfsbootmenu/hooks
+      - rm -rf /etc/zfsbootmenu/hooks
 
   copy-release-config:
     desc: Clean & copy release build configuration for ZFSBootMenu
@@ -68,7 +81,7 @@ tasks:
       - task: clean-old-configs
       - cp zfsbootmenu/release.conf.d/*.conf /etc/zfsbootmenu/dracut.conf.d/
       - cp zfsbootmenu/config.yaml /etc/zfsbootmenu/config.yaml
-      # - cp -r zfsbootmenu/hooks /etc/zfsbootmenu/
+      - cp -r zfsbootmenu/hooks /etc/zfsbootmenu/
 
   copy-recovery-config:
     desc: Clean & copy recovery build configuration for ZFSBootMenu with remote access
@@ -76,7 +89,7 @@ tasks:
       - task: clean-old-configs
       - cp zfsbootmenu/recovery.conf.d/*.conf /etc/zfsbootmenu/dracut.conf.d/
       - cp zfsbootmenu/config.yaml /etc/zfsbootmenu/config.yaml
-      # - cp -r zfsbootmenu/hooks /etc/zfsbootmenu/
+      - cp -r zfsbootmenu/hooks /etc/zfsbootmenu/
 
   generate-zbm:
     desc: Generate ZFSBootMenu
