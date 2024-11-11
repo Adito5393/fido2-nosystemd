@@ -64,18 +64,62 @@ if cryptsetup status "${dm}" >/dev/null 2>&1 ; then
 fi
 
 header="$( center_string "[CTRL-C] cancel luksOpen attempts" )"
+header_choices="$( center_string "Unlock LUKS via password or FIDO2" )"
 
+tput clear
 while true; do
-  tput clear
-  colorize red "${header}\n\n"
+  colorize red "${header_choices}\n\n"
 
-  cryptsetup --tries=5 luksOpen "${luks}" KEYSTORE
-  # TODO: wait for FIDO2 to be pluged int!!!
-  # See example bash code: https://github.com/olastor/clevis-pin-fido2/blob/main/clevis-decrypt-fido2
-  # cryptsetup open --token-only "${luks}" KEYSTORE
+  echo "Select unlock method:"
+  echo "1) Unlock via password"
+  echo "2) Unlock via FIDO2"
+  echo "9) Exit script and continue to the ZFS password prompt"
+  read -rp "Enter your choice (1, 2 or 9): " choice
+
+  case "$choice" in
+    1)
+      tput clear
+      colorize red "${header}\n\n"
+      cryptsetup --tries=5 luksOpen "${luks}" KEYSTORE
+      ;;
+    2)
+      zinfo "Waiting for FIDO2 device..."
+
+      # Detect FIDO2 device
+      FILES=/dev/hidraw*
+      DEVICE=""
+      for f in $FILES; do
+        FILE=${f##*/}
+        DEVICE_NAME="$(cat /sys/class/hidraw/${FILE}/device/uevent | grep -oP '(?<=HID_NAME=).*')"
+        printf "%s \t %s\n" $FILE "$DEVICE_NAME"
+        if [[ "$DEVICE_NAME" == *"FIDO"* ]]; then
+          DEVICE=$f
+          break
+        fi
+      done
+
+      if [ -z "$DEVICE" ]; then
+          echo "FIDO2 device not found. Insert or check connection?"
+          continue
+      fi
+
+      echo "$DEVICE detected: FIDO device"
+      cryptsetup open --token-only "${luks}" KEYSTORE
+      ;;
+    9)
+      zdebug "Exiting the script via user input key 9"
+      exit
+      ;;
+    *)
+      zwarn "Invalid choice. Please enter 1 or 2."
+      echo "Invalid choice. Please enter 1 or 2."
+      continue
+      ;;
+  esac
+
   ret=$?
 
-  # successfully entered a passphrase
+  # successfully entered a passphrase or used FIDO2
   if [ "${ret}" -eq 0 ] ; then
     mkdir -p /etc/zfs/keys
     mount -r "${dm}" /etc/zfs/keys
