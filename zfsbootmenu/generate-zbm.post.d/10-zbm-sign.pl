@@ -76,17 +76,14 @@ for (@EFIBins) {
   if ( $SignMethod eq "sbctl" ) {
     system "sbctl sign $ZBM/$_";
   } elsif ( $SignMethod eq "sbsign" ) {
-    $Unsigned = substr( $_, 0, -4 );
-    system "sbsign --key $KeyDir/$KeyFileName --cert $KeyDir/$CrtFileName $ZBM/$_ --output $ZBM/$Unsigned-signed.efi";
+    my $verify_output = "sbverify --cert $KeyDir/$CrtFileName $ZBM/$_ 2>&1";
+    if ( $verify_output =~ /Signature verification OK/ ) {
+      say "File $_ is already signed.";
+      next;
+    }
+    system "sbsign --key $KeyDir/$KeyFileName --cert $KeyDir/$CrtFileName $ZBM/$_ --output $ZBM/$_";
   } else {
     die "Sign method $SignMethod not valid.";
-  }
-
-  if ( $DeleteUnsigned && $SignMethod eq "sbctl" ) {
-    say "sbctl signs in place, not deleting $_";
-  } elsif ( $DeleteUnsigned && $SignMethod ne "sbctl" ) {
-    say "Deleting unsigned $_";
-    system "rm $ZBM/$_";
   }
 }
 print "---------- FINISHED ----------\n";

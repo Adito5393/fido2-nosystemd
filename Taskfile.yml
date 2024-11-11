@@ -7,7 +7,7 @@ tasks:
       - apt update
       - apt install -y sbsigntool shim-signed
       - echo "Mark sbsigntool package as held back, which will prevent the package from being automatically installed, upgraded or removed."
-      - apt-mark hold sbsigntool
+      - apt-mark manual sbsigntool
       # - apt-mark showhold OR to allow automatically upgrades: apt-mark unhold sbsigntool
 
   sb:update-auto-signing-setup:
