@@ -60,9 +60,9 @@ opendir my $ZBM_dir, $ZBM
   or die "Cannot open ZBM dir: $ZBM";
 
 if ($SignBackups) {
-  @EFIBins = grep { !/signed\.efi$/i and /\.efi/i } readdir $ZBM_dir;
+  @EFIBins = sort grep { !/signed\.efi$/i and /\.efi/i } readdir $ZBM_dir;
 } else {
-  @EFIBins = grep { !/signed\.efi$/i and !/backup/i and /\.efi/i } readdir $ZBM_dir;
+  @EFIBins = sort grep { !/signed\.efi$/i and !/backup/i and /\.efi/i } readdir $ZBM_dir;
 }
 
 say "Found: @EFIBins";
