@@ -19,8 +19,6 @@ Kernel:
   CommandLine: ro quiet loglevel=0
 SecureBoot:
   SignBackup: true
-  DeleteUnsigned: true
   SignMethod: sbsign
-  KeyDir: /etc/refind.d/keys
-  KeyFileName: refind_local.key
-  CrtFileName: refind_local.crt
+  KeyFileName: /etc/refind.d/keys/refind_local.key
+  CrtFileName: /etc/refind.d/keys/refind_local.crt
