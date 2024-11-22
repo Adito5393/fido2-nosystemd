@@ -72,7 +72,7 @@ for (@EFIBins) {
   if ( $SignMethod eq "sbctl" ) {
     system "sbctl sign $ZBM/$_";
   } elsif ( $SignMethod eq "sbsign" ) {
-    my $verify_output = "sbverify --cert $CrtFileName $ZBM/$_ 2>&1";
+    my $verify_output = `sbverify --cert $CrtFileName $ZBM/$_ 2>&1`;
     if ( $verify_output =~ /Signature verification OK/ ) {
       say "File $_ is already signed.";
       next;
