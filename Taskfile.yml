@@ -6,15 +6,17 @@ tasks:
     cmds:
       - task: initial-setup:install-dependencies
       - task: copy-dracut-module
-      - task: initial-setup:configure-refind
       - task: copy-release-config
       - task: generate-zbm
+      - task: initial-setup:configure-refind
 
   sb:install-dependencies:
     desc: Install required dependencies for secure boot
+    env:
+      DEBIAN_FRONTEND: noninteractive
     cmds:
-      - apt update
-      - apt install -y sbsigntool shim-signed
+      - apt-get update
+      - apt-get install -y sbsigntool shim-signed
       # - echo "Mark sbsigntool package as held back, which will prevent the package from being automatically installed, upgraded or removed."
       # - apt-mark manual sbsigntool
       # - apt-mark showhold OR to allow automatically upgrades: apt-mark unhold sbsigntool
@@ -28,9 +30,11 @@ tasks:
 
   initial-setup:install-dependencies:
     desc: Install required dependencies for dracut module
+    env:
+      DEBIAN_FRONTEND: noninteractive
     cmds:
-      - apt update
-      - apt install -y fido2-tools cryptsetup dropbear-bin dracut-core dracut-network
+      - apt-get update
+      - apt-get install -y fido2-tools cryptsetup dropbear-bin dracut-core dracut-network
 
   initial-setup:install-crypt-ssh-nohelpers:
     desc: Copy the crypt-ssh (no helpers) module to dracut directory
@@ -68,7 +72,7 @@ tasks:
       # - refind-install
       - rm -f /boot/refind_linux.conf
       - |
-          cat << EOF > /boot/efi/EFI/ZBM/refind_linux.conf
+          cat << EOF > /boot/efi/EFI/zbm/refind_linux.conf
           "Boot default"  "loglevel=7 zbm.timeout=60"
           "Boot to menu"  "quiet loglevel=0 zbm.show"
           EOF
@@ -110,12 +114,12 @@ tasks:
 
   rename-zbm-efi-recovery:
     desc: Rename the latest ZFSBootMenu EFI file to avoid pruning during future builds
-    dir: /boot/efi/EFI/ZBM
+    dir: /boot/efi/EFI/zbm
     cmds:
       - mv $(ls vmlinuz-2.3.0_*.EFI | sort -V | tail -n 1) vmlinuz-recovery.EFI
 
   rename-zbm-efi-release:
     desc: Rename the latest ZFSBootMenu EFI file for release build
-    dir: /boot/efi/EFI/ZBM
+    dir: /boot/efi/EFI/zbm
     cmds:
       - mv $(ls vmlinuz-2.3.0_*.EFI | sort -V | tail -n 1) vmlinuz-release.EFI
