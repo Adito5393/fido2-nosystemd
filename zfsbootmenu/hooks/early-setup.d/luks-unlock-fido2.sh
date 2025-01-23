@@ -74,7 +74,12 @@ while true; do
   echo "1) Unlock via password"
   echo "2) Unlock via FIDO2"
   echo "9) Exit script and continue to the ZFS password prompt"
-  read -rp "Enter your choice (1, 2 or 9): " choice
+  read -rp "Enter your choice (1, 2 or 9) [default=1]: " choice
+
+  # If user presses Enter with no input, default to 1
+  if [ -z "$choice" ]; then
+    choice=1
+  fi
 
   case "$choice" in
     1)
