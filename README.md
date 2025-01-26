@@ -1,7 +1,5 @@
 # Dracut module fido2-nosystemd
 
-⚠️ **Use at own risk and consider this plugin to be experimental right now.** ⚠️
-
 THE PROBLEM: the [dracut fido2](https://github.com/dracutdevs/dracut/blob/master/modules.d/91fido2/module-setup.sh) depends on 2 modules that are [incompatible with ZBM](https://github.com/zbm-dev/zfsbootmenu/blob/master/etc/zfsbootmenu/dracut.conf.d/zfsbootmenu.conf#L3):
 
 - module 'fido2' depends on 'systemd-udevd'
