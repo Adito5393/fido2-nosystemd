@@ -116,10 +116,10 @@ tasks:
     desc: Rename the latest ZFSBootMenu EFI file to avoid pruning during future builds
     dir: /boot/efi/EFI/zbm
     cmds:
-      - mv $(ls vmlinuz-2.3.0_*.EFI | sort -V | tail -n 1) vmlinuz-recovery.EFI
+      - mv $(ls vmlinuz-*.*.*_*.EFI | sort -V | tail -n 1) vmlinuz-recovery.EFI
 
   rename-zbm-efi-release:
     desc: Rename the latest ZFSBootMenu EFI file for release build
     dir: /boot/efi/EFI/zbm
     cmds:
-      - mv $(ls vmlinuz-2.3.0_*.EFI | sort -V | tail -n 1) vmlinuz-release.EFI
+      - mv $(ls vmlinuz-*.*.*_*.EFI | sort -V | tail -n 1) vmlinuz-release.EFI
